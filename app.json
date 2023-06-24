@@ -11,9 +11,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+    "extra": {
+      "fonts": [
+        {
+          "asset": "assets/fonts/Poppins/Poppins-Regular.ttf"
+        }
+      ]
+    },
     "ios": {
       "supportsTablet": true
     },
