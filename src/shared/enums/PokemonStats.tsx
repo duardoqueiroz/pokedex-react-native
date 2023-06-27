@@ -1,0 +1,8 @@
+export enum POKEMON_STATS {
+  HP = "HP",
+  ATTACK = "ATK",
+  DEFENSE = "DEF",
+  SPECIAL_ATTACK = "SATK",
+  SPECIAL_DEFENSE = "SDEF",
+  SPEED = "SPD",
+}
