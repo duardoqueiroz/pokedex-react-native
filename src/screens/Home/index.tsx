@@ -7,18 +7,12 @@ import Loading from "../../components/Loading";
 import SearchBar from "../../components/SearchBar";
 import SortButton from "../../components/SortButton";
 import SortModal from "../../components/SortModal";
-
+import { IPokemon } from "../../shared/interfaces/IPokemon";
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from "react-native-simple-radio-button";
-
-interface Pokemon {
-  id: string;
-  image: string;
-  name: string;
-}
 
 enum SORT_BY {
   CODE = 0,
@@ -26,10 +20,10 @@ enum SORT_BY {
 }
 
 const Home = () => {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [filteredPokemons, setFilteredPokemons] = useState<Pokemon[]>([]);
+  const [pokemons, setPokemons] = useState<IPokemon[]>([]);
+  const [filteredPokemons, setFilteredPokemons] = useState<IPokemon[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [sortBy, setSortBy] = useState(SORT_BY.CODE);
 
   const radioProps = [
@@ -43,14 +37,32 @@ const Home = () => {
         const { data } = await axios.get(
           "https://pokeapi.co/api/v2/pokemon?limit=152&offset=0"
         );
-        const pokemonsList: Pokemon[] = [];
+        const pokemonsList: IPokemon[] = [];
         for (const pokemon of data.results) {
           const { data } = await axios.get(pokemon.url);
-          // console.log(data.id.toString());
           pokemonsList.push({
             id: `${"#" + data.id.toString().padStart(3, "0")}`,
             image: data.sprites.other["official-artwork"].front_default,
             name: data.name.charAt(0).toUpperCase() + data.name.slice(1),
+            weight: data.weight,
+            height: data.height,
+            stats: data.stats.map((stat: any) => {
+              return {
+                value: stat.base_stat,
+                name:
+                  stat.stat.name.charAt(0).toUpperCase() +
+                  stat.stat.name.slice(1),
+              };
+            }),
+            types: data.types.map((type: any) => {
+              return {
+                slot: type.slot,
+                name:
+                  type.type.name.charAt(0).toUpperCase() +
+                  type.type.name.slice(1),
+              };
+            }),
+            moves: data.moves.map((move: any) => {}),
           });
         }
         setPokemons(pokemonsList);
@@ -63,11 +75,11 @@ const Home = () => {
     fetchPokemons();
   }, []);
 
-  const renderCards = (pokemons: Pokemon[]) => {
+  const renderCards = (pokemons: IPokemon[]) => {
     let cardElements: JSX.Element[] = [];
     let currentRow: Array<JSX.Element> = [];
 
-    pokemons.forEach((pokemon: Pokemon, index: number) => {
+    pokemons.forEach((pokemon: IPokemon, index: number) => {
       currentRow.push(
         <Card
           key={index}
