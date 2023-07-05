@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingLeft: 12,
     paddingRight: 12,
-    paddingBottom: 50,
+    paddingBottom: 24,
     borderRadius: 8,
     boxShadow: "0px 1px 3px 1px #00000040 inset",
   },

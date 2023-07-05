@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 24,
-    paddingTop: 26,
-    paddingBottom: 16,
+    paddingTop: 20,
+    paddingBottom: 10,
     gap: 8,
   },
   headerNavigation: {
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 24,
   },
-  headerContainer: {},
   headerTitle: {
     color: "#FFFFFF",
     fontFamily: "Poppins",
@@ -40,14 +39,25 @@ const styles = StyleSheet.create({
   },
   blankContainer: {
     alignItems: "center",
-    height: 170,
+    height: 130,
+    zIndex: 10,
+  },
+  pokemonNavigation: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    marginBottom: 15,
+  },
+  pokemonNavigationIcon: {
+    fontSize: 20,
+    color: "#FFFFFF",
   },
   image: {
+    position: "absolute",
+    marginTop: 80,
+    alignSelf: "center",
     height: 200,
     width: 200,
-    alignSelf: "center",
-    position: "absolute",
-    marginTop: 100,
     zIndex: 10,
   },
   pokemonTypes: {

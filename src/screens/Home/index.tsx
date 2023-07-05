@@ -99,7 +99,10 @@ const Home = ({ navigation }: Props) => {
       currentRow.push(
         <Pressable
           onPress={() =>
-            navigation.navigate("PokemonDetails", { pokemon: pokemon })
+            navigation.navigate("PokemonDetails", {
+              pokemons: pokemons,
+              index: index,
+            })
           }
         >
           <Card
