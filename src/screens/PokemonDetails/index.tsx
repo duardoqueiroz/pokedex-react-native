@@ -4,7 +4,7 @@ import {
   IPokemonStats,
   IPokemonType,
 } from "../../shared/interfaces/IPokemon";
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, Pressable } from "react-native";
 import styles from "./styles";
 import Icon from "react-native-vector-icons/AntDesign";
 import FaIcon from "react-native-vector-icons/FontAwesome5";
@@ -18,11 +18,16 @@ interface IPokemonDetailsProps {
   pokemon: IPokemon;
 }
 
-const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
+interface NavigationProps {
+  navigation: any;
+  route: any;
+}
+
+const PokemonDetails = ({ navigation, route }: NavigationProps) => {
   const [mainColor, setMainColor] = useState<string>("#B8B8B8");
 
   useEffect(() => {
-    setMainColor(handleMainColor(pokemon.types));
+    setMainColor(handleMainColor(route.params.pokemon.types));
   });
 
   const handleMainColor = (type: IPokemonType[]) => {
@@ -32,7 +37,7 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
   };
 
   const renderPokemonTypes = (types: IPokemonType[]) => {
-    return pokemon.types.map((type, index) => {
+    return route.params.pokemon.types.map((type: any, index: number) => {
       return <PokemonType type={type.name}></PokemonType>;
     });
   };
@@ -45,7 +50,7 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
           style={{
             textAlign: "center",
           }}
-          key={index}
+          key={`${move.charAt(0)}-${index}`}
         >
           {move}
         </Text>
@@ -77,22 +82,28 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
         {/* <Image source={require("../../../assets/Pokeball.png")}></Image> */}
         <View style={styles.header}>
           <View style={styles.headerNavigation}>
-            <Icon style={styles.headerIcon} name="arrowleft"></Icon>
-            <Text style={styles.headerTitle}>{pokemon.name}</Text>
+            <Pressable onPress={() => navigation.navigate("Home")}>
+              <Icon style={styles.headerIcon} name="arrowleft"></Icon>
+            </Pressable>
+            <Text style={styles.headerTitle}>{route.params.pokemon.name}</Text>
           </View>
           <View>
-            <Text style={styles.headerId}>{pokemon.id}</Text>
+            <Text style={styles.headerId}>{route.params.pokemon.id}</Text>
           </View>
         </View>
         <View style={styles.blankContainer}></View>
       </View>
-      <Image style={styles.image} source={{ uri: pokemon.image }}></Image>
-
+      <MaIcon name="arrow-back-ios"></MaIcon>
+      <Image
+        style={styles.image}
+        source={{ uri: route.params.pokemon.image }}
+      ></Image>
+      <MaIcon name="arrow-forward-ios"></MaIcon>
       {/* ------- STATS --------- */}
       <View style={styles.subContainer}>
         {/* -------- TYPES --------- */}
         <View style={styles.pokemonTypes}>
-          {renderPokemonTypes(pokemon.types)}
+          {renderPokemonTypes(route.params.pokemon.types)}
         </View>
 
         {/* -------- ABOUT --------- */}
@@ -116,7 +127,7 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
                     name="weight-hanging"
                     style={styles.weightIcon}
                   ></FaIcon>
-                  <Text>{pokemon.weight} kg</Text>
+                  <Text>{route.params.pokemon.weight} kg</Text>
                 </View>
               }
             ></PokemonAbout>
@@ -132,7 +143,7 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
                   }}
                 >
                   <MaIcon name="straighten" style={styles.heightIcon}></MaIcon>
-                  <Text>{pokemon.height} m</Text>
+                  <Text>{route.params.pokemon.height} m</Text>
                 </View>
               }
               style={styles.heightContainer}
@@ -141,7 +152,9 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
               propertyName="Moves"
               value={
                 <View>
-                  <ScrollView>{renderPokemonMoves(pokemon.moves)}</ScrollView>
+                  <ScrollView>
+                    {renderPokemonMoves(route.params.pokemon.moves)}
+                  </ScrollView>
                 </View>
               }
               style={{
@@ -159,7 +172,9 @@ const PokemonDetails: React.FC<IPokemonDetailsProps> = ({ pokemon }) => {
             </Text>
           </View>
           <View style={styles.baseStatsDataContainer}></View>
-          <ScrollView>{renderPokemonStats(pokemon.stats)}</ScrollView>
+          <ScrollView>
+            {renderPokemonStats(route.params.pokemon.stats)}
+          </ScrollView>
         </View>
       </View>
     </View>

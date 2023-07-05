@@ -1,4 +1,11 @@
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 import styles from "./styles";
 import Card from "../../components/Card/index";
 import { useEffect, useState } from "react";
@@ -19,7 +26,11 @@ enum SORT_BY {
   NAME = 1,
 }
 
-const Home = () => {
+interface Props {
+  navigation: any;
+}
+
+const Home = ({ navigation }: Props) => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
   const [filteredPokemons, setFilteredPokemons] = useState<IPokemon[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,7 +46,7 @@ const Home = () => {
     const fetchPokemons = async () => {
       try {
         const { data } = await axios.get(
-          "https://pokeapi.co/api/v2/pokemon?limit=152&offset=0"
+          "https://pokeapi.co/api/v2/pokemon?limit=50&offset=0"
         );
         const pokemonsList: IPokemon[] = [];
         for (const pokemon of data.results) {
@@ -62,7 +73,12 @@ const Home = () => {
                   type.type.name.slice(1),
               };
             }),
-            moves: data.moves.map((move: any) => {}),
+            moves: data.moves.map((move: any) => {
+              return move.move.name
+                .charAt(0)
+                .toUpperCase()
+                .concat(move.move.name.slice(1));
+            }),
           });
         }
         setPokemons(pokemonsList);
@@ -81,12 +97,18 @@ const Home = () => {
 
     pokemons.forEach((pokemon: IPokemon, index: number) => {
       currentRow.push(
-        <Card
-          key={index}
-          id={pokemon.id}
-          name={pokemon.name}
-          image={pokemon.image}
-        />
+        <Pressable
+          onPress={() =>
+            navigation.navigate("PokemonDetails", { pokemon: pokemon })
+          }
+        >
+          <Card
+            key={pokemon.id}
+            id={pokemon.id}
+            name={pokemon.name}
+            image={pokemon.image}
+          />
+        </Pressable>
       );
 
       if ((index + 1) % 3 === 0 || index === pokemons.length - 1) {
@@ -138,15 +160,15 @@ const Home = () => {
         style={{
           // alignContent: "center",
           // flex: 1,
-          // flexDirection: "row",
+          flexDirection: "row",
           marginTop: 50,
           marginLeft: 10,
         }}
       >
-        {/* <Image
-          style={{ marginTop: 5, tintColor: "white" }}
+        <Image
+          style={{ marginTop: 5, tintColor: "white", width: 40, height: 40 }}
           source={require("../../../assets/Pokeball.png")}
-        /> */}
+        />
         <Text
           style={{
             marginLeft: 10,
@@ -240,9 +262,7 @@ const Home = () => {
       </View>
       {/* -------  SCROLL VIEW  -------- */}
       <View style={styles.subContainer}>
-        <ScrollView scrollEnabled={visible}>
-          {renderCards(filteredPokemons)}
-        </ScrollView>
+        <ScrollView>{renderCards(filteredPokemons)}</ScrollView>
       </View>
     </View>
   );
